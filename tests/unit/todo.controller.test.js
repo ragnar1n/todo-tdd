@@ -2,6 +2,7 @@ const TodoController = require('../../controllers/todo.controller')
 const TodoModel = require('../../models/todo.model')
 const httpMocks = require('node-mocks-http')
 const newTodo = require('../mock-data/new-todo.json')
+const {raw} = require("express");
 
 TodoModel.create = jest.fn()
 
@@ -25,14 +26,14 @@ describe('TodoController.createTodo', () => {
         TodoController.createTodo(req, res, next)
         expect(TodoModel.create).toBeCalledWith(newTodo)
     });
-    it('should return 201 response code', () => {
-        TodoController.createTodo(req, res, next)
+    it('should return 201 response code', async () => {
+        await TodoController.createTodo(req, res, next)
         expect(res.statusCode).toBe(201)
         expect(res._isEndCalled()).toBeTruthy()
     });
-    it('should return json body in response', () => {
-        TodoModel.create.mockReturnValue(newTodo)
-        TodoController.createTodo(req, res, next)
+    it('should return json body in response', async () => {
+        await TodoModel.create.mockReturnValue(newTodo)
+        await TodoController.createTodo(req, res, next)
         expect(res._getJSONData()).toStrictEqual(newTodo)
     });
 });
