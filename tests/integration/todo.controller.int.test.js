@@ -5,6 +5,8 @@ const {response} = require("express");
 
 const endpointUrl = '/todos/'
 
+let firstTodo
+
 describe(endpointUrl, () => {
     it('POST '+ endpointUrl, async () => {
         const response = await request(app)
@@ -29,6 +31,19 @@ describe(endpointUrl, () => {
         expect(Array.isArray(response.body)).toBeTruthy();
         expect(response.body[0].title).toBeDefined();
         expect(response.body[0].done).toBeDefined();
+        firstTodo = response.body[0]
     });
+    it("GET by Id " + endpointUrl + ":todoId", async () => {
+        const response = await request(app)
+            .get(endpointUrl + firstTodo._id);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe(firstTodo.title);
+        expect(response.body.done).toBe(firstTodo.done);
+    });
+    it("GET todo by id doesn't exist" + endpointUrl + ":todoId", async () => {
+        const response = await request(app)
+            .get(endpointUrl + "65aae51ecd33cac1abcd00da");
+        expect(response.statusCode).toBe(404);
+    })
 });
 

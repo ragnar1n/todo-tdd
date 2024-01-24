@@ -1,4 +1,5 @@
 const TodoModel = require('../models/todo.model')
+const Console = require("console");
 
 const createTodo = async (req, res, next) =>{
     try{
@@ -17,4 +18,18 @@ const getTodos = async (req, res, next) =>{
     }
 }
 
-module.exports = {createTodo, getTodos}
+const getTodoById = async (req, res, next) =>{
+    try{
+        const todoModel = await TodoModel.findById(req.params.todoId)
+        if (todoModel){
+            res.status(200).json(todoModel)
+        }else {
+            res.status(404).send()
+        }
+    } catch (error){
+        next(error)
+    }
+
+}
+
+module.exports = {createTodo, getTodos, getTodoById}
